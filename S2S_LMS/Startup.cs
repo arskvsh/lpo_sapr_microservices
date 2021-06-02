@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using S2S_LMS.Domain.Interfaces;
+using S2S_LMS.Domain.Services;
+using S2S_LMS.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +29,9 @@ namespace S2S_LMS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            //dependency injection
+            services.AddTransient<ICourseService, CourseService>();
+            services.AddTransient<ICourseRepository, CourseRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
