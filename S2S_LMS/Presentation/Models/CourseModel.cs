@@ -15,7 +15,7 @@ namespace S2S_LMS.Presentation.Models
         public CourseModel(Course course)
         {
             Name = course?.Name ?? throw new ArgumentNullException(nameof(course.Name));
-            Teacher = course?.Teacher ?? throw new ArgumentNullException(nameof(course.Teacher));
+            Teacher = course?.Teacher_Lect ?? throw new ArgumentNullException(nameof(course.Teacher_Lect));
             Description = course?.Description ?? throw new ArgumentNullException(nameof(course.Description));
         }
     }

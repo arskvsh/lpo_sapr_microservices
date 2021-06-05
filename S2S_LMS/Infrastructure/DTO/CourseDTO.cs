@@ -10,7 +10,9 @@ namespace S2S_LMS.Infrastructure.DTO
     {
         public int id { get; set; }
         public string name { get; set; }
-        public string teacher { get; set; }
+        public string t_lect { get; set; }
+        public string t_pract { get; set; }
+        public string t_lab { get; set; }
         public string description { get; set; }
 
         public Course ToModel()
@@ -18,8 +20,10 @@ namespace S2S_LMS.Infrastructure.DTO
             return new Course() 
             { 
                 Name = name, 
-                Teacher = teacher, 
-                Description = description 
+                Teacher_Lect = t_lect,
+                Teacher_Pract = t_pract,
+                Teacher_Lab = t_lab,
+                Description = description
             };
         }
     }

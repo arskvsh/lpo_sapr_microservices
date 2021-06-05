@@ -18,7 +18,9 @@ namespace S2S_LMS.Infrastructure.Repositories
             using(var connection = new SqlConnection("Server=localhost;Database=s2slms;Integrated Security=true;"))
             {
                 await connection.OpenAsync();
-                using (var cmd = new SqlCommand("SELECT * FROM dbo.Courses", connection))
+                using (var cmd = new SqlCommand(
+                    "SELECT * from CoursesList"
+                    , connection))
                 {
                     var rdr = await cmd.ExecuteReaderAsync();
                     while (rdr.Read())
@@ -26,7 +28,10 @@ namespace S2S_LMS.Infrastructure.Repositories
                         courses.Add(new CourseDTO()
                         {
                             id = int.Parse(rdr["id"].ToString()),
-                            teacher = rdr["teacher"].ToString(),
+                            name = rdr["name"].ToString(),
+                            t_lect = rdr["t_lect_name"].ToString(),
+                            t_pract = rdr["t_pract_name"].ToString(),
+                            t_lab = rdr["t_lab_name"].ToString(),
                             description = rdr["description"].ToString()
                         });
                     }
