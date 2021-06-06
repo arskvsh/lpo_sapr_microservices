@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using S2S_LMS.Domain.Entities;
-using S2S_LMS.Domain.Interfaces;
+using Courses.Domain.Entities;
+using Courses.Domain.Interfaces;
 
-namespace S2S_LMS.Domain.Services
+namespace Courses.Domain.Services
 {
     public class CourseService : ICourseService
     {

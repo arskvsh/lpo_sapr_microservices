@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using S2S_LMS.Presentation.Models;
+using Courses.Presentation.Models;
 using Microsoft.AspNetCore.Mvc;
-using S2S_LMS.Domain.Interfaces;
+using Courses.Domain.Interfaces;
 
-namespace S2S_LMS.Presentation.Controllers
+namespace Courses.Presentation.Controllers
 {
     [ApiController]
     [Route(template:"courses")]
-    public class CoursesController : ControllerBase
+    public class CoursesListController : ControllerBase
     {
         private readonly ICourseService _courseService;
 
-        public CoursesController(ICourseService courseService)
+        public CoursesListController(ICourseService courseService)
         {
             _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
         }
@@ -22,7 +22,7 @@ namespace S2S_LMS.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok((await _courseService.GetCourses()).Select(с => new CourseModel(с)));
+            return Ok((await _courseService.GetCourses()).Select(с => new CourseListModel(с)));
         }
     }
 }

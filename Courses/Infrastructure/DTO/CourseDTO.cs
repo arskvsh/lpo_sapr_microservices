@@ -1,10 +1,10 @@
-﻿using S2S_LMS.Domain.Entities;
+﻿using Courses.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace S2S_LMS.Infrastructure.DTO
+namespace Courses.Infrastructure.DTO
 {
     public class CourseDTO
     {
@@ -17,8 +17,9 @@ namespace S2S_LMS.Infrastructure.DTO
 
         public Course ToModel()
         {
-            return new Course() 
-            { 
+            return new Course()
+            {
+                Id = id,
                 Name = name, 
                 Teacher_Lect = t_lect,
                 Teacher_Pract = t_pract,

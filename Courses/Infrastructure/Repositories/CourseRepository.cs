@@ -1,6 +1,6 @@
-﻿using S2S_LMS.Domain.Entities;
-using S2S_LMS.Domain.Interfaces;
-using S2S_LMS.Infrastructure.DTO;
+﻿using Courses.Domain.Entities;
+using Courses.Domain.Interfaces;
+using Courses.Infrastructure.DTO;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
-namespace S2S_LMS.Infrastructure.Repositories
+namespace Courses.Infrastructure.Repositories
 {
     public class CourseRepository : ICourseRepository
     {

@@ -9,12 +9,12 @@ namespace Courses.Domain.Interfaces
     /// <summary>
     /// Служба для работы с интерфейсами
     /// </summary>
-    public interface ICourseService
+    public interface IFeedService
     {
         /// <summary>
         /// Возвращает список курсов
         /// </summary>
         /// <returns></returns>
-        Task<Course[]> GetCourses();
+        Task<FeedPost[]> GetFeed();
     }
 }
