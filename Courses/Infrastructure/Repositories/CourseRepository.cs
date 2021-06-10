@@ -13,6 +13,7 @@ namespace Courses.Infrastructure.Repositories
     public class CourseRepository : ICourseRepository
     {
         private const string CONNECTION_STRING_NAME = "S2SLMS";
+        private const string QUERY = "GetCourseList";
 
         private readonly IConfiguration _config;
 
@@ -28,7 +29,7 @@ namespace Courses.Infrastructure.Repositories
             {
                 await connection.OpenAsync();
                 using (var cmd = new SqlCommand(
-                    "SELECT * from CoursesList"
+                    QUERY
                     , connection))
                 {
                     var rdr = await cmd.ExecuteReaderAsync();
