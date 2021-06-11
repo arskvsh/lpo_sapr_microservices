@@ -1,0 +1,17 @@
+services:
+  courses:
+    container_name: Courses
+    build:
+      context: .
+      dockerfile: ./Courses/Dockerfile
+    image: courses:latest
+    ports:
+      - "5000:5000"
+  gateway:
+    container_name: Gateway
+    build:
+      context: .
+      dockerfile: ./Gateway/Dockerfile
+    image: gateway:latest
+    ports:
+      - "6863:6863"

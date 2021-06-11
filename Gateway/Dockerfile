@@ -6,8 +6,8 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
-COPY ["Gateway/Gateway.csproj", "Gateway/"]
-RUN dotnet restore "Gateway/Gateway.csproj"
+COPY ["Gateway/Gateway.csproj", "."]
+RUN dotnet restore "Gateway.csproj"
 COPY . .
 WORKDIR "/src/Gateway"
 RUN dotnet build "Gateway.csproj" -c Release -o /app/build
