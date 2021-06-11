@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Sentry;
+using Serilog;
 
 namespace Gateway
 {
@@ -20,6 +22,8 @@ namespace Gateway
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseSentry();
+                    webBuilder.UseSerilog();
                     webBuilder.UseStartup<Startup>();
                 });
     }

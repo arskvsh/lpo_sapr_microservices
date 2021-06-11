@@ -18,5 +18,10 @@ namespace Courses.Domain.Services
         {
             return await _courseRepository.GetCourses();
         }
+
+        public async Task<Course> GetCourse(int course_id)
+        {
+            return await _courseRepository.GetCourse(course_id);
+        }
     }
 }

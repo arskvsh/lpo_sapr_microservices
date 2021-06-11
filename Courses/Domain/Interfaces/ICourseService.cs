@@ -16,5 +16,6 @@ namespace Courses.Domain.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<Course[]> GetCourses();
+        Task<Course> GetCourse(int course_id);
     }
 }

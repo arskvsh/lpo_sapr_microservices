@@ -9,5 +9,6 @@ namespace Courses.Domain.Interfaces
     public interface ICourseRepository
     {
         Task<Course[]> GetCourses();
+        Task<Course> GetCourse(int course_id);
     }
 }

@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Sentry.AspNetCore;
 
 namespace S2S_LMS
 {
@@ -29,10 +30,13 @@ namespace S2S_LMS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
 
             //dependency injection - подключаем реализации интерфейсов
             services.AddTransient<ICourseService, CourseService>();
+            services.AddTransient<ICourseFeedService, CourseFeedService>();
             services.AddTransient<ICourseRepository, CourseRepository>();
+            services.AddTransient<ICourseFeedRepository, CourseFeedRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +50,8 @@ namespace S2S_LMS
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseSentryTracing();
 
             app.UseAuthorization();
 

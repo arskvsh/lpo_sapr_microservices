@@ -13,6 +13,5 @@ namespace Courses.Domain.Entities
         public string Teacher_Pract { get; set; }
         public string Teacher_Lab { get; set; }
         public string Description { get; set; }
-        public string[] Feed { get; set; }
     }
 }
