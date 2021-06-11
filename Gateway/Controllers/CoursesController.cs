@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -78,6 +79,87 @@ namespace Gateway.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
 
+        }
+        [Route("api/v1/courses/{course_id}/feed")]
+        [HttpGet]
+        public async Task<IActionResult> GetCourseFeed(int course_id)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var url = _config.GetSection("CoursesUri").Value;
+                    var resultMessage = await client.GetAsync($"{url}courses/{course_id}/feed");
+                    var result = await resultMessage.Content.ReadAsStringAsync();
+                    return Ok(result);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+
+        }
+
+        [Route("api/v1/courses/{course_id}/feed/add")]
+        [HttpPost]
+        public async Task<IActionResult> AddPost(object value, int course_id)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var url = _config.GetSection("CoursesUri").Value;
+                    var resultMessage = await client.PostAsJsonAsync($"{url}courses/{course_id}/feed/add", value);
+                    var result = await resultMessage.Content.ReadAsStringAsync();
+                    return Ok(result);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+
+        }
+
+        [Route("api/v1/courses/{course_id}/feed/edit")]
+        [HttpPost]
+        public async Task<IActionResult> EditPost(object value)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var url = _config.GetSection("CoursesUri").Value;
+                    var resultMessage = await client.PostAsJsonAsync($"{url}courses/{{course_id}}/feed/edit", value);
+                    var result = await resultMessage.Content.ReadAsStringAsync();
+                    return Ok(result);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+        }
+
+        [Route("api/v1/courses/{course_id}/feed/delete")]
+        [HttpPost]
+        public async Task<IActionResult> DeletePost(object value)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    var url = _config.GetSection("CoursesUri").Value;
+                    var resultMessage = await client.PostAsJsonAsync($"{url}courses/{{course_id}}/feed/delete", value);
+                    var result = await resultMessage.Content.ReadAsStringAsync();
+                    return Ok(result);
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
         }
     }
 }
