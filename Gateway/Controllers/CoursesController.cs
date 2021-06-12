@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace Gateway.Controllers
 {
@@ -144,7 +145,7 @@ namespace Gateway.Controllers
         }
 
         [Route("api/v1/courses/{course_id}/feed/edit")]
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> EditPost(object value)
         {
             var logger = new LoggerConfiguration()
@@ -159,7 +160,7 @@ namespace Gateway.Controllers
                 using (HttpClient client = new HttpClient())
                 {
                     var url = _config.GetSection("CoursesUri").Value;
-                    var resultMessage = await client.PostAsJsonAsync($"{url}courses/{{course_id}}/feed/edit", value);
+                    var resultMessage = await client.PutAsJsonAsync($"{url}courses/{{course_id}}/feed/edit", value);
                     var result = await resultMessage.Content.ReadAsStringAsync();
                     return Ok(result);
                 }
@@ -172,8 +173,9 @@ namespace Gateway.Controllers
             }
         }
 
+        //Нетипичная реализация, т.к. тело у метода HTTP DELETE реализовано только начиная с .NET 5
         [Route("api/v1/courses/{course_id}/feed/delete")]
-        [HttpPost]
+        [HttpDelete]
         public async Task<IActionResult> DeletePost(object value)
         {
             var logger = new LoggerConfiguration()
@@ -188,7 +190,13 @@ namespace Gateway.Controllers
                 using (HttpClient client = new HttpClient())
                 {
                     var url = _config.GetSection("CoursesUri").Value;
-                    var resultMessage = await client.PostAsJsonAsync($"{url}courses/{{course_id}}/feed/delete", value);
+                    HttpRequestMessage request = new HttpRequestMessage
+                    {
+                        Content = JsonContent.Create(value),
+                        Method = HttpMethod.Delete,
+                        RequestUri = new Uri($"{url}courses/{{course_id}}/feed/delete")
+                    };
+                    var resultMessage = await client.SendAsync(request);
                     var result = await resultMessage.Content.ReadAsStringAsync();
                     return Ok(result);
                 }

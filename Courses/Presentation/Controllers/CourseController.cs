@@ -14,12 +14,12 @@ namespace Courses.Presentation.Controllers
 {
     [ApiController]
     
-    public class CoursesListController : ControllerBase
+    public class CourseController : ControllerBase
     {
         private readonly ICourseService _courseService;
-        private readonly ILogger<CoursesListController> _logger;
+        private readonly ILogger<CourseController> _logger;
 
-        public CoursesListController(ICourseService courseService, ILogger<CoursesListController> logger)
+        public CourseController(ICourseService courseService, ILogger<CourseController> logger)
         {
             _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

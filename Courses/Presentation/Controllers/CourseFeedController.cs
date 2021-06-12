@@ -16,9 +16,9 @@ namespace Courses.Presentation.Controllers
     public class CourseFeedController : ControllerBase
     {
         private readonly ICourseFeedService _courseFeedService;
-        private readonly ILogger<CoursesListController> _logger;
+        private readonly ILogger<CourseController> _logger;
 
-        public CourseFeedController(ICourseFeedService courseFeedService, ILogger<CoursesListController> logger)
+        public CourseFeedController(ICourseFeedService courseFeedService, ILogger<CourseController> logger)
         {
             _courseFeedService = courseFeedService ?? throw new ArgumentNullException(nameof(courseFeedService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -76,7 +76,7 @@ namespace Courses.Presentation.Controllers
 
         //редактирование содержимого поста
         [Route("courses/{course_id}/feed/edit")]
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> EditPost([FromBody] CourseFeedPostModel model)
         {
             var logger = new LoggerConfiguration()
@@ -100,7 +100,7 @@ namespace Courses.Presentation.Controllers
 
         //удаление поста из ленты
         [Route("courses/{course_id}/feed/delete")]
-        [HttpPost]
+        [HttpDelete]
         public async Task<IActionResult> DeletePost([FromBody] CourseFeedPostModel model)
         {
             var logger = new LoggerConfiguration()

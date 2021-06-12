@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Courses", "Courses\Courses.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway", "Gateway\Gateway.csproj", "{5AB1D2BE-68E5-47DD-94FE-8989CDD01BEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teachers", "Schedule\Teachers.csproj", "{A4504979-6472-430A-AF89-86A32615932D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schedule", "Schedule\Schedule.csproj", "{A4504979-6472-430A-AF89-86A32615932D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
