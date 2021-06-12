@@ -8,6 +8,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Gateway.Controllers
 {
@@ -15,10 +16,12 @@ namespace Gateway.Controllers
     public class CoursesController : ControllerBase
     {
         private IConfiguration _config;
+        private readonly ILogger<CoursesController> _logger;
 
-        public CoursesController(IConfiguration config)
+        public CoursesController(IConfiguration config, ILogger<CoursesController> logger)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [Route("api/v1/courses")]
@@ -44,7 +47,7 @@ namespace Gateway.Controllers
             }
             catch (Exception e)
             {
-                logger.Error("Произошла ошибка на шлюзе");
+                logger.Fatal("Произошла фатальная ошибка на шлюзе");
 
                 return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
@@ -74,7 +77,7 @@ namespace Gateway.Controllers
             }
             catch (Exception e)
             {
-                logger.Error("Произошла ошибка на шлюзе");
+                logger.Fatal("Произошла фатальная ошибка на шлюзе");
 
                 return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
@@ -84,8 +87,15 @@ namespace Gateway.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCourseFeed(int course_id)
         {
+            var logger = new LoggerConfiguration()
+                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
+                logger.Information("Шлюз обрабатывает GET-запрос");
+
                 using (HttpClient client = new HttpClient())
                 {
                     var url = _config.GetSection("CoursesUri").Value;
@@ -96,6 +106,8 @@ namespace Gateway.Controllers
             }
             catch (Exception e)
             {
+                logger.Fatal("Произошла фатальная ошибка на шлюзе");
+
                 return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
 
@@ -105,8 +117,15 @@ namespace Gateway.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPost(object value, int course_id)
         {
+            var logger = new LoggerConfiguration()
+                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
+                logger.Information("Шлюз обрабатывает POST-запрос");
+
                 using (HttpClient client = new HttpClient())
                 {
                     var url = _config.GetSection("CoursesUri").Value;
@@ -117,6 +136,8 @@ namespace Gateway.Controllers
             }
             catch (Exception e)
             {
+                logger.Fatal("Произошла фатальная ошибка на шлюзе");
+
                 return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
 
@@ -126,8 +147,15 @@ namespace Gateway.Controllers
         [HttpPost]
         public async Task<IActionResult> EditPost(object value)
         {
+            var logger = new LoggerConfiguration()
+                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
+                logger.Information("Шлюз обрабатывает POST-запрос");
+
                 using (HttpClient client = new HttpClient())
                 {
                     var url = _config.GetSection("CoursesUri").Value;
@@ -138,6 +166,8 @@ namespace Gateway.Controllers
             }
             catch (Exception e)
             {
+                logger.Fatal("Произошла фатальная ошибка на шлюзе");
+
                 return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
         }
@@ -146,8 +176,15 @@ namespace Gateway.Controllers
         [HttpPost]
         public async Task<IActionResult> DeletePost(object value)
         {
+            var logger = new LoggerConfiguration()
+                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
+                logger.Information("Шлюз обрабатывает POST-запрос");
+
                 using (HttpClient client = new HttpClient())
                 {
                     var url = _config.GetSection("CoursesUri").Value;
@@ -158,6 +195,8 @@ namespace Gateway.Controllers
             }
             catch (Exception e)
             {
+                logger.Fatal("Произошла фатальная ошибка на шлюзе");
+
                 return StatusCode(StatusCodes.Status500InternalServerError, e);
             }
         }

@@ -26,6 +26,8 @@ namespace Courses.Infrastructure.Repositories
         {
             List<CourseDTO> courses = new List<CourseDTO>();
 
+            Console.WriteLine(_config.GetConnectionString(CONNECTION_STRING_NAME));
+
             using (var connection = new SqlConnection(_config.GetConnectionString(CONNECTION_STRING_NAME)))
             {
                 await connection.OpenAsync();
