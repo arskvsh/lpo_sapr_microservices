@@ -50,7 +50,7 @@ namespace Courses.Infrastructure.Repositories
                     }
                 }
             }
-            return courses.Select(c => c.ToModel()).ToArray();
+            return courses.Select(c => c.ToEntity()).ToArray();
         }
         public async Task<Course> GetCourse(int course_id)
         {
@@ -78,7 +78,7 @@ namespace Courses.Infrastructure.Repositories
                     }
                 }
             }
-            return course.ToModel();
+            return course.ToEntity();
         }
     }
 }

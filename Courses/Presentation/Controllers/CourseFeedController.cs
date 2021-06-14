@@ -18,6 +18,12 @@ namespace Courses.Presentation.Controllers
         private readonly ICourseFeedService _courseFeedService;
         private readonly ILogger<CourseController> _logger;
 
+        Serilog.Core.Logger logger = new LoggerConfiguration()
+            .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
+            .WriteTo.Console()
+            .Enrich.FromLogContext()
+            .CreateLogger();
+
         public CourseFeedController(ICourseFeedService courseFeedService, ILogger<CourseController> logger)
         {
             _courseFeedService = courseFeedService ?? throw new ArgumentNullException(nameof(courseFeedService));
@@ -29,14 +35,9 @@ namespace Courses.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(int course_id)
         {
-            var logger = new LoggerConfiguration()
-                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
             try
             {
-                logger.Information("Запрос на получение ленты курса");
+                logger.Information("Получен запрос на получение ленты курса");
 
                 return Ok((await _courseFeedService.GetCourseFeed(course_id)).Select(f => new CourseFeedPostModel(f)));
             }
@@ -52,20 +53,18 @@ namespace Courses.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPost([FromBody]CourseFeedPostModel model, int course_id)
         {
-            var logger = new LoggerConfiguration()
-                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
             try
             {
                 if (model == null)
                     return BadRequest("Запись не может быть пустой");
 
+                logger.Information("Получен запрос на добавление поста");
+
                 model.CourseId = course_id;
                 model.DateTime = DateTime.Now;
 
-                return Ok((_courseFeedService.AddPost(model.ToEntity())));
+                await _courseFeedService.AddPost(model.ToEntity());
+                return StatusCode(StatusCodes.Status200OK);
             }
             catch (Exception e)
             {
@@ -79,17 +78,15 @@ namespace Courses.Presentation.Controllers
         [HttpPut]
         public async Task<IActionResult> EditPost([FromBody] CourseFeedPostModel model)
         {
-            var logger = new LoggerConfiguration()
-            .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-            .WriteTo.Console()
-            .Enrich.FromLogContext()
-            .CreateLogger();
             try
             {
                 if (model == null)
                     return BadRequest("Текст записи не может быть пустой");
 
-                return Ok((_courseFeedService.EditPost(model.ToEntity())));
+                logger.Information("Получен запрос на редактирование поста");
+
+                await _courseFeedService.EditPost(model.ToEntity());
+                return StatusCode(StatusCodes.Status200OK);
             }
             catch (Exception e)
             {
@@ -103,17 +100,15 @@ namespace Courses.Presentation.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeletePost([FromBody] CourseFeedPostModel model)
         {
-            var logger = new LoggerConfiguration()
-            .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-            .WriteTo.Console()
-            .Enrich.FromLogContext()
-            .CreateLogger();
             try
             {
                 if (model == null)
                     return BadRequest("Текст записи не может быть пустой");
 
-                return Ok((_courseFeedService.DeletePost(model.ToEntity())));
+                logger.Information("Получен запрос на удаление поста");
+
+                await _courseFeedService.DeletePost(model.ToEntity());
+                return StatusCode(StatusCodes.Status200OK);
             }
             catch (Exception e)
             {

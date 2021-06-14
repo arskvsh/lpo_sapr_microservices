@@ -19,6 +19,11 @@ namespace Courses.Presentation.Controllers
         private readonly ICourseService _courseService;
         private readonly ILogger<CourseController> _logger;
 
+        Serilog.Core.Logger logger = new LoggerConfiguration()
+            .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
+            .WriteTo.Console()
+            .Enrich.FromLogContext()
+            .CreateLogger();
         public CourseController(ICourseService courseService, ILogger<CourseController> logger)
         {
             _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
@@ -29,11 +34,6 @@ namespace Courses.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCourses()
         {
-            var logger = new LoggerConfiguration()
-                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
             try
             {
                 logger.Information("Запрос на получение списка курсов");
@@ -51,11 +51,6 @@ namespace Courses.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCourse(int course_id)
         {
-            var logger = new LoggerConfiguration()
-                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
             try
             {
                 logger.Information("Запрос на получение информации об одном курсе");

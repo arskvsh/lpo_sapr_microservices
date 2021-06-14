@@ -13,7 +13,7 @@ namespace Courses.Infrastructure.DTO
         public DateTime datetime { get; set; }
         public string content { get; set; }
 
-        public CourseFeedPost ToModel()
+        public CourseFeedPost ToEntity()
         {
             return new CourseFeedPost()
             {

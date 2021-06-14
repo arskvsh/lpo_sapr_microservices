@@ -9,6 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Schedule.Domain.Interfaces;
+using Schedule.Infrastructure.Repository;
+using Schedule.Domain.Services;
+using Sentry.AspNetCore;
 
 namespace Schedule
 {
@@ -25,6 +29,10 @@ namespace Schedule
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
+
+            services.AddTransient<IScheduleService, ScheduleService>();
+            services.AddTransient<IScheduleRepository, ScheduleRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +46,8 @@ namespace Schedule
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSentryTracing();
 
             app.UseEndpoints(endpoints =>
             {

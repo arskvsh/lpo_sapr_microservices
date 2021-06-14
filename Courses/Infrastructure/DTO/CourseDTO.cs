@@ -15,7 +15,7 @@ namespace Courses.Infrastructure.DTO
         public string t_lab { get; set; }
         public string description { get; set; }
 
-        public Course ToModel()
+        public Course ToEntity()
         {
             return new Course()
             {

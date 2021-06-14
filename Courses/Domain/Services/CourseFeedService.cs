@@ -25,7 +25,7 @@ namespace Courses.Domain.Services
                 throw new ArgumentNullException(nameof(post));
             }
 
-            _courseFeedRepository.AddPost(post);
+            await _courseFeedRepository.AddPost(post);
         }
         public async Task EditPost(CourseFeedPost post)
         {
@@ -34,7 +34,7 @@ namespace Courses.Domain.Services
                 throw new ArgumentNullException(nameof(post));
             }
 
-            _courseFeedRepository.EditPost(post);
+            await _courseFeedRepository.EditPost(post);
         }
         public async Task DeletePost(CourseFeedPost post)
         {
@@ -43,7 +43,7 @@ namespace Courses.Domain.Services
                 throw new ArgumentNullException(nameof(post));
             }
 
-            _courseFeedRepository.DeletePost(post);
+            await _courseFeedRepository.DeletePost(post);
         }
     }
 }

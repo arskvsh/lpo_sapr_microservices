@@ -7,6 +7,14 @@ services:
     image: courses:latest
     ports:
       - "5000:80"
+  schedule:
+    container_name: Schedule
+    build:
+      context: .
+      dockerfile: ./Schedule/Dockerfile
+    image: schedule:latest
+    ports:
+      - "5001:80"
   gateway:
     container_name: Gateway
     build:
@@ -14,4 +22,4 @@ services:
       dockerfile: ./Gateway/Dockerfile
     image: gateway:latest
     ports:
-      - "6863:80"
+      - "80:80"

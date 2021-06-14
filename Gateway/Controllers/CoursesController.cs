@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using Microsoft.Extensions.Logging;
 using System.Text;
+using Serilog.Core;
 
 namespace Gateway.Controllers
 {
@@ -18,6 +19,12 @@ namespace Gateway.Controllers
     {
         private IConfiguration _config;
         private readonly ILogger<CoursesController> _logger;
+
+        Logger logger = new LoggerConfiguration()
+            .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
+            .WriteTo.Console()
+            .Enrich.FromLogContext()
+            .CreateLogger();
 
         public CoursesController(IConfiguration config, ILogger<CoursesController> logger)
         {
@@ -29,11 +36,6 @@ namespace Gateway.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCoursesList()
         {
-            var logger = new LoggerConfiguration()
-                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает GET-запрос");
@@ -59,11 +61,6 @@ namespace Gateway.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCourse(int course_id)
         {
-            var logger = new LoggerConfiguration()
-                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает GET-запрос");
@@ -88,11 +85,6 @@ namespace Gateway.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCourseFeed(int course_id)
         {
-            var logger = new LoggerConfiguration()
-                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает GET-запрос");
@@ -118,11 +110,6 @@ namespace Gateway.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPost(object value, int course_id)
         {
-            var logger = new LoggerConfiguration()
-                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает POST-запрос");
@@ -148,11 +135,6 @@ namespace Gateway.Controllers
         [HttpPut]
         public async Task<IActionResult> EditPost(object value)
         {
-            var logger = new LoggerConfiguration()
-                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает POST-запрос");
@@ -178,11 +160,6 @@ namespace Gateway.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeletePost(object value)
         {
-            var logger = new LoggerConfiguration()
-                .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-                .WriteTo.Console()
-                .Enrich.FromLogContext()
-                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает POST-запрос");

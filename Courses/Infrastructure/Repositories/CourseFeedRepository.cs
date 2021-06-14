@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using System.Globalization;
 
 namespace Courses.Infrastructure.Repositories
 {
@@ -48,7 +49,7 @@ namespace Courses.Infrastructure.Repositories
                     }
                 }
             }
-            return courseFeed.Select(cfeed => cfeed.ToModel()).ToArray();
+            return courseFeed.Select(cfeed => cfeed.ToEntity()).ToArray();
         }
 
         public async Task AddPost(CourseFeedPost cfpost)
@@ -57,7 +58,7 @@ namespace Courses.Infrastructure.Repositories
             {
                 await connection.OpenAsync();
                 using (var cmd = new SqlCommand(
-                    string.Format(_config.GetValue<string>(ADD_POST_QUERY_NAME), cfpost.CourseId, cfpost.DateTime, cfpost.Content)
+                    string.Format(_config.GetValue<string>(ADD_POST_QUERY_NAME), cfpost.CourseId, cfpost.Content)
                     , connection))
                 {
                     await cmd.ExecuteNonQueryAsync();
@@ -67,7 +68,7 @@ namespace Courses.Infrastructure.Repositories
 
         public async Task EditPost(CourseFeedPost cfpost)
         {
-            List<CourseFeedPostDTO> courseFeed = new List<CourseFeedPostDTO>();
+            CourseFeedPostDTO courseFeed = new CourseFeedPostDTO();
 
             using (var connection = new SqlConnection(_config.GetConnectionString(CONNECTION_STRING_NAME)))
             {
