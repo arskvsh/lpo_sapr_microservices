@@ -12,14 +12,14 @@ using Newtonsoft.Json.Linq;
 using Schedule.Domain.Interfaces;
 using System.Globalization;
 
-namespace Schedule.Infrastructure.Repository
+namespace Schedule.Infrastructure.Providers
 {
-    public class ScheduleRepository : IScheduleRepository
+    public class ScheduleProvider : IScheduleProvider
     {
         private const string GET_SCHEDULE_LINK = "GetLinks:Misis";
 
         private readonly IConfiguration _config;
-        public ScheduleRepository(IConfiguration config)
+        public ScheduleProvider(IConfiguration config)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
         }

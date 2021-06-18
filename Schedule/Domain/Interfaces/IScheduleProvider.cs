@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Schedule.Domain.Interfaces
 {
-    public interface IScheduleRepository
+    public interface IScheduleProvider
     {
         public Task<ESchedule> GetScheduleFromMISIS(ESchedule schedule);
     }

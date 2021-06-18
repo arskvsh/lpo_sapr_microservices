@@ -11,6 +11,6 @@ namespace Courses.Domain.Interfaces
         Task<CourseFeedPost[]> GetCourseFeed(int course_id);
         Task AddPost(CourseFeedPost post);
         Task EditPost(CourseFeedPost post);
-        Task DeletePost(CourseFeedPost post);
+        Task DeletePost(int course_id, int post_id);
     }
 }

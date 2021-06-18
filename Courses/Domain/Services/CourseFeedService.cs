@@ -36,14 +36,9 @@ namespace Courses.Domain.Services
 
             await _courseFeedRepository.EditPost(post);
         }
-        public async Task DeletePost(CourseFeedPost post)
+        public async Task DeletePost(int course_id, int post_id)
         {
-            if (post == null)
-            {
-                throw new ArgumentNullException(nameof(post));
-            }
-
-            await _courseFeedRepository.DeletePost(post);
+            await _courseFeedRepository.DeletePost(course_id, post_id);
         }
     }
 }

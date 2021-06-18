@@ -9,6 +9,7 @@ using Courses.Presentation.Models;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Courses.Domain.Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace Courses.Presentation.Controllers
 {
@@ -16,16 +17,12 @@ namespace Courses.Presentation.Controllers
     public class CourseFeedController : ControllerBase
     {
         private readonly ICourseFeedService _courseFeedService;
+        private IConfiguration _config;
         private readonly ILogger<CourseController> _logger;
 
-        Serilog.Core.Logger logger = new LoggerConfiguration()
-            .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-            .WriteTo.Console()
-            .Enrich.FromLogContext()
-            .CreateLogger();
-
-        public CourseFeedController(ICourseFeedService courseFeedService, ILogger<CourseController> logger)
+        public CourseFeedController(IConfiguration config, ICourseFeedService courseFeedService, ILogger<CourseController> logger)
         {
+            _config = config ?? throw new ArgumentNullException(nameof(config));
             _courseFeedService = courseFeedService ?? throw new ArgumentNullException(nameof(courseFeedService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -33,8 +30,13 @@ namespace Courses.Presentation.Controllers
         //просмотр ленты курса
         [Route("courses/{course_id}/feed")]
         [HttpGet]
-        public async Task<IActionResult> Get(int course_id)
+        public async Task<IActionResult> Get([FromRoute]int course_id)
         {
+            Serilog.Core.Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
                 logger.Information("Получен запрос на получение ленты курса");
@@ -51,8 +53,13 @@ namespace Courses.Presentation.Controllers
         //добавление поста в ленту курса
         [Route("courses/{course_id}/feed/add")]
         [HttpPost]
-        public async Task<IActionResult> AddPost([FromBody]CourseFeedPostModel model, int course_id)
+        public async Task<IActionResult> AddPost([FromBody]CourseFeedPostModel model, [FromRoute]int course_id)
         {
+            Serilog.Core.Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
                 if (model == null)
@@ -61,7 +68,6 @@ namespace Courses.Presentation.Controllers
                 logger.Information("Получен запрос на добавление поста");
 
                 model.CourseId = course_id;
-                model.DateTime = DateTime.Now;
 
                 await _courseFeedService.AddPost(model.ToEntity());
                 return StatusCode(StatusCodes.Status200OK);
@@ -74,16 +80,24 @@ namespace Courses.Presentation.Controllers
         }
 
         //редактирование содержимого поста
-        [Route("courses/{course_id}/feed/edit")]
+        [Route("courses/{course_id}/feed/{post_id}/edit")]
         [HttpPut]
-        public async Task<IActionResult> EditPost([FromBody] CourseFeedPostModel model)
+        public async Task<IActionResult> EditPost([FromBody]CourseFeedPostModel model, [FromRoute]int course_id, [FromRoute]int post_id)
         {
+            Serilog.Core.Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
-                if (model == null)
-                    return BadRequest("Текст записи не может быть пустой");
+                if (model == null || course_id <= 0 || post_id <= 0)
+                    return BadRequest("Неверный формат запроса!");
 
                 logger.Information("Получен запрос на редактирование поста");
+
+                model.PostId = post_id;
+                model.CourseId = course_id;
 
                 await _courseFeedService.EditPost(model.ToEntity());
                 return StatusCode(StatusCodes.Status200OK);
@@ -96,18 +110,23 @@ namespace Courses.Presentation.Controllers
         }
 
         //удаление поста из ленты
-        [Route("courses/{course_id}/feed/delete")]
+        [Route("courses/{course_id}/feed/{post_id}/delete")]
         [HttpDelete]
-        public async Task<IActionResult> DeletePost([FromBody] CourseFeedPostModel model)
+        public async Task<IActionResult> DeletePost([FromRoute]int course_id, [FromRoute]int post_id)
         {
+            Serilog.Core.Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
-                if (model == null)
-                    return BadRequest("Текст записи не может быть пустой");
+                if (course_id <= 0 || post_id <= 0)
+                    return BadRequest("Неверный формат запроса!");
 
                 logger.Information("Получен запрос на удаление поста");
 
-                await _courseFeedService.DeletePost(model.ToEntity());
+                await _courseFeedService.DeletePost(course_id, post_id);
                 return StatusCode(StatusCodes.Status200OK);
             }
             catch (Exception e)

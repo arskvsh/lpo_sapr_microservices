@@ -9,10 +9,10 @@ namespace Schedule.Domain.Services
 {
     public class ScheduleService : IScheduleService
     {
-        private readonly IScheduleRepository _scheduleRepository;
-        public ScheduleService(IScheduleRepository repository)
+        private readonly IScheduleProvider _scheduleRepository;
+        public ScheduleService(IScheduleProvider provider)
         {
-            _scheduleRepository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _scheduleRepository = provider ?? throw new ArgumentNullException(nameof(provider));
         }
         public async Task<ESchedule> GetScheduleFromMISIS(ESchedule schedule)
         {

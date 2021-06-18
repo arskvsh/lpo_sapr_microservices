@@ -9,6 +9,7 @@ using Sentry;
 using Schedule.Presentation.Models;
 using Schedule.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace Schedule.Presentation.Controllers
 {
@@ -17,23 +18,24 @@ namespace Schedule.Presentation.Controllers
     {
         private readonly IScheduleService _scheduleService;
         private readonly ILogger<ScheduleController> _logger;
+        private IConfiguration _config;
 
-        public ScheduleController(IScheduleService scheduleService, ILogger<ScheduleController> logger)
+        public ScheduleController(IConfiguration config, IScheduleService scheduleService, ILogger<ScheduleController> logger)
         {
+            _config = config ?? throw new ArgumentNullException(nameof(config));
             _scheduleService = scheduleService ?? throw new ArgumentNullException(nameof(scheduleService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-
-        Serilog.Core.Logger logger = new LoggerConfiguration()
-            .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-            .WriteTo.Console()
-            .Enrich.FromLogContext()
-            .CreateLogger();
 
         [Route("schedule")]
         [HttpPost]
         public async Task<IActionResult> GetScheduleFromMISIS([FromBody]ScheduleModel input)
         {
+            Serilog.Core.Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
                 logger.Information("Получен запрос на получение данных от третьей стороны");
@@ -50,8 +52,13 @@ namespace Schedule.Presentation.Controllers
 
         [Route("schedule/current")]
         [HttpPost]
-        public async Task<IActionResult> GetCurrentScheduleFromMISIS([FromBody] ScheduleModel input)
+        public async Task<IActionResult> GetCurrentScheduleFromMISIS([FromBody]ScheduleModel input)
         {
+            Serilog.Core.Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
                 logger.Information("Получен запрос на получение данных от третьей стороны");

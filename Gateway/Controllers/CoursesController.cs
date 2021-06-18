@@ -20,12 +20,6 @@ namespace Gateway.Controllers
         private IConfiguration _config;
         private readonly ILogger<CoursesController> _logger;
 
-        Logger logger = new LoggerConfiguration()
-            .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-            .WriteTo.Console()
-            .Enrich.FromLogContext()
-            .CreateLogger();
-
         public CoursesController(IConfiguration config, ILogger<CoursesController> logger)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
@@ -36,6 +30,11 @@ namespace Gateway.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCoursesList()
         {
+            Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает GET-запрос");
@@ -59,8 +58,13 @@ namespace Gateway.Controllers
 
         [Route("api/v1/courses/{course_id}")]
         [HttpGet]
-        public async Task<IActionResult> GetCourse(int course_id)
+        public async Task<IActionResult> GetCourse([FromRoute]int course_id)
         {
+            Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает GET-запрос");
@@ -85,6 +89,11 @@ namespace Gateway.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCourseFeed(int course_id)
         {
+            Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает GET-запрос");
@@ -110,6 +119,11 @@ namespace Gateway.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPost(object value, int course_id)
         {
+            Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает POST-запрос");
@@ -131,18 +145,23 @@ namespace Gateway.Controllers
 
         }
 
-        [Route("api/v1/courses/{course_id}/feed/edit")]
+        [Route("api/v1/courses/{course_id}/feed/{post_id}/edit")]
         [HttpPut]
-        public async Task<IActionResult> EditPost(object value)
+        public async Task<IActionResult> EditPost([FromBody]object value, [FromRoute] int course_id, [FromRoute] int post_id)
         {
+            Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
-                logger.Information("Шлюз обрабатывает POST-запрос");
+                logger.Information("Шлюз обрабатывает PUT-запрос");
 
                 using (HttpClient client = new HttpClient())
                 {
                     var url = _config.GetSection("CoursesUri").Value;
-                    var resultMessage = await client.PutAsJsonAsync($"{url}courses/{{course_id}}/feed/edit", value);
+                    var resultMessage = await client.PutAsJsonAsync($"{url}courses/{course_id}/feed/{post_id}/edit", value);
                     var result = await resultMessage.Content.ReadAsStringAsync();
                     return Ok(result);
                 }
@@ -155,25 +174,23 @@ namespace Gateway.Controllers
             }
         }
 
-        //Нетипичная реализация, т.к. тело у метода HTTP DELETE реализовано только начиная с .NET 5
-        [Route("api/v1/courses/{course_id}/feed/delete")]
+        [Route("api/v1/courses/{course_id}/feed/{post_id}/delete")]
         [HttpDelete]
-        public async Task<IActionResult> DeletePost(object value)
+        public async Task<IActionResult> DeletePost([FromRoute]int course_id, [FromRoute]int post_id)
         {
+            Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
-                logger.Information("Шлюз обрабатывает POST-запрос");
+                logger.Information("Шлюз обрабатывает DELETE-запрос");
 
                 using (HttpClient client = new HttpClient())
                 {
                     var url = _config.GetSection("CoursesUri").Value;
-                    HttpRequestMessage request = new HttpRequestMessage
-                    {
-                        Content = JsonContent.Create(value),
-                        Method = HttpMethod.Delete,
-                        RequestUri = new Uri($"{url}courses/{{course_id}}/feed/delete")
-                    };
-                    var resultMessage = await client.SendAsync(request);
+                    var resultMessage = await client.DeleteAsync($"{url}courses/{course_id}/feed/{post_id}/delete");
                     var result = await resultMessage.Content.ReadAsStringAsync();
                     return Ok(result);
                 }

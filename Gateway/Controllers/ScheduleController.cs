@@ -20,12 +20,6 @@ namespace Gateway.Controllers
         private IConfiguration _config;
         private readonly ILogger<ScheduleController> _logger;
 
-        Logger logger = new LoggerConfiguration()
-            .WriteTo.Sentry("https://5669ac43d4bf4ea7ad072ba57496940b@o825521.ingest.sentry.io/5811140")
-            .WriteTo.Console()
-            .Enrich.FromLogContext()
-            .CreateLogger();
-
         public ScheduleController(IConfiguration config, ILogger<ScheduleController> logger)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
@@ -33,9 +27,14 @@ namespace Gateway.Controllers
         }
 
         [Route("api/v1/schedule")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetScheduleFromMisis(object value)
         {
+            Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает GET-запрос");
@@ -58,9 +57,14 @@ namespace Gateway.Controllers
         }
 
         [Route("api/v1/schedule/current")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetCurrentScheduleFromMisis(object value)
         {
+            Logger logger = new LoggerConfiguration()
+                .WriteTo.Sentry(_config.GetSection("Sentry").Value)
+                .WriteTo.Console()
+                .Enrich.FromLogContext()
+                .CreateLogger();
             try
             {
                 logger.Information("Шлюз обрабатывает GET-запрос");

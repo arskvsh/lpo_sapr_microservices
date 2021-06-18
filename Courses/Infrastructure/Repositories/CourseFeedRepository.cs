@@ -74,7 +74,7 @@ namespace Courses.Infrastructure.Repositories
             {
                 await connection.OpenAsync();
                 using (var cmd = new SqlCommand(
-                    string.Format(_config.GetValue<string>(EDIT_POST_QUERY_NAME), cfpost.PostId, cfpost.Content)
+                    string.Format(_config.GetValue<string>(EDIT_POST_QUERY_NAME), cfpost.Content, cfpost.PostId, cfpost.CourseId)
                     , connection))
                 {
                     await cmd.ExecuteNonQueryAsync();
@@ -82,7 +82,7 @@ namespace Courses.Infrastructure.Repositories
             }
         }
 
-        public async Task DeletePost(CourseFeedPost cfpost)
+        public async Task DeletePost(int course_id, int post_id)
         {
             List<CourseFeedPostDTO> courseFeed = new List<CourseFeedPostDTO>();
 
@@ -90,7 +90,7 @@ namespace Courses.Infrastructure.Repositories
             {
                 await connection.OpenAsync();
                 using (var cmd = new SqlCommand(
-                    string.Format(_config.GetValue<string>(DELETE_POST_QUERY_NAME), cfpost.PostId)
+                    string.Format(_config.GetValue<string>(DELETE_POST_QUERY_NAME), post_id, course_id)
                     , connection))
                 {
                     await cmd.ExecuteNonQueryAsync();

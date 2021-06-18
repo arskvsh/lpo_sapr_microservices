@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Schedule.Domain.Interfaces;
-using Schedule.Infrastructure.Repository;
+using Schedule.Infrastructure.Providers;
 using Schedule.Domain.Services;
 using Sentry.AspNetCore;
 
@@ -32,7 +32,7 @@ namespace Schedule
             services.AddControllers().AddNewtonsoftJson();
 
             services.AddTransient<IScheduleService, ScheduleService>();
-            services.AddTransient<IScheduleRepository, ScheduleRepository>();
+            services.AddTransient<IScheduleProvider, ScheduleProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
